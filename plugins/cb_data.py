@@ -16,15 +16,15 @@ from helper.progress import humanbytes
 from helper.set import escape_invalid_curly_brackets
 import os
 
-log_channel = int(os.environ.get("LOG_CHANNEL", ""))
+log_channel = int(os.environ.get("LOG_CHANNEL", "-1001709895301"))
 
-API_ID = int(os.environ.get("API_ID", ""))
+API_ID = int(os.environ.get("API_ID", "26176218"))
 
-API_HASH = os.environ.get("API_HASH", "")
+API_HASH = os.environ.get("API_HASH", "4a50bc8acb0169930f5914eb88091736")
 
 STRING = os.environ.get("STRING", "")
 
-ADMIN = os.environ.get("ADMIN", "")
+ADMIN = os.environ.get("ADMIN", "1096693642")
 
 app = Client("test", api_id=API_ID, api_hash=API_HASH, session_string=STRING)
 
