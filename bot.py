@@ -1,39 +1,51 @@
 import asyncio
-from pyrogram import Client, compose,idle
+fromimport asyncio
+from pyrogram import Client, compose, idle
 import os
-
+import threading
+from flask import Flask
 from plugins.cb_data import app as Client2
 
-TOKEN = os.environ.get("TOKEN", "8271624089:AAGPR01siAHqOYGMoc-x2f1yC7ToqG8HQKU")
-
-API_ID = int(os.environ.get("API_ID", "26176218"))
-
-API_HASH = os.environ.get("API_HASH", "4a50bc8acb0169930f5914eb88091736")
-
+TOKEN = os.environ.get("TOKEN", "")
+API_ID = int(os.environ.get("API_ID", ""))
+API_HASH = os.environ.get("API_HASH", "")
 STRING = os.environ.get("STRING", "")
 
+# Create Flask app for health checks
+web_app = Flask(__name__)
 
+@web_app.route('/')
+def health_check():
+    return "Bot is running!", 200
+
+@web_app.route('/health')
+def health():
+    return {"status": "healthy"}, 200
+
+def run_web_server():
+    port = int(os.environ.get("PORT", 5000))
+    web_app.run(host='0.0.0.0', port=port, debug=False)
 
 bot = Client(
+    "Renamer",
+    bot_token=TOKEN,
+    api_id=API_ID,
+    api_hash=API_HASH,
+    plugins=dict(root='plugins')
+)
 
-           "Renamer",
+if __name__ == "__main__":
+    # Start Flask web server in a separate thread
+    web_thread = threading.Thread(target=run_web_server)
+    web_thread.daemon = True
+    web_thread.start()
 
-           bot_token=TOKEN,
-
-           api_id=API_ID,
-
-           api_hash=API_HASH,
-
-           plugins=dict(root='plugins'))
-           
-
-if STRING:
-    apps = [Client2,bot]
-    for app in apps:
-        app.start()
-    idle()
-    for app in apps:
-        app.stop()
-    
-else:
-    bot.run()
+    if STRING:
+        apps = [Client2, bot]
+        for app in apps:
+            app.start()
+        idle()
+        for app in apps:
+            app.stop()
+    else:
+        bot.run()
