@@ -33,7 +33,7 @@ def health():
     return {"status": "healthy"}, 200
 
 def run_web_server():
-    port = int(os.environ.get("PORT", 80))
+    port = int(os.environ.get("PORT", 5000))
     web_app.run(host='0.0.0.0', port=port, debug=False)
 
 bot = Client(
